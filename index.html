@@ -27,7 +27,7 @@
         <a @click.prevent="changeCurrentSort(index)" href="#">{{ item }}</a>
       </li>
     </ul>
-    <p>共有 <span style="color: red">{{ nowGames.length }}</span> 款游戏</p>
+    <p v-if="nowGames.length >= 1">共有 <span style="color: red">{{ nowGames.length }}</span> 款游戏</p>
     <ol>
       <li v-for="item in nowGames">
         <a @click.prevent="download(item)" href="#">{{ item["title"] }}</a>
@@ -105,7 +105,7 @@
           methods: {
             url2cdn: function(item) {
               const { file_id } = item
-              const result = `https://cdn.jsdelivr.net/gh/${ this.gh_user }/${ this.gh_repo }${ file_id }`
+              const result = `https://ghproxy.com/https://github.com/${ this.gh_user }/${ this.gh_repo }/blob/master${ file_id }`
               return result
             },
             getAllGames: function() {
@@ -119,7 +119,15 @@
               })
             },
             download: function(item) {
-              window.open(this.url2cdn(item));
+              try {
+                const a = document.createElement('a')
+                a.href = this.url2cdn(item)
+                a.download = item.title
+                a.click()
+              } catch (error) {
+                console.error(error)
+              }
+              return false
             },
             changeCurrentSort: function(index) {
               this.nowGames = index
