@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>JAVA游戏下载</title>
+  <style>
+    .sort-class {
+      border: 1px solid rgba(0, 0, 0, .4);
+      border-radius: 5px;
+      padding: 20px;
+    }
+    .sort-class li {
+      display: inline-block;
+      padding: 4px 10px;
+    }
+  </style>
+</head>
+
+<body>
+  <div id="app">
+    <h1>{{ title }}</h1>
+    <ul class="sort-class" v-if="nowGames.length >= 1">
+      <li v-for="(item, index) in sorts">
+        <a @click.prevent="changeCurrentSort(index)" href="#">{{ item }}</a>
+      </li>
+    </ul>
+    <p>共有 <span style="color: red">{{ nowGames.length }}</span> 款游戏</p>
+    <ol>
+      <li v-for="item in nowGames">
+        <a @click.prevent="download(item)" href="#">{{ item["title"] }}</a>
+      </li>
+    </ol>
+  </div>
+  <script src="https://cdn.bootcdn.net/ajax/libs/vue/2.4.0/vue.min.js"></script>
+  <script>
+
+    const Ajax = {
+      get: function (url, fn) {
+        var xhr = new XMLHttpRequest();
+        xhr.open('GET', url, true);
+        xhr.onreadystatechange = function () {
+          if (xhr.readyState == 4 && xhr.status == 200 || xhr.status == 304) {
+            fn.call(this, xhr.responseText);
+          }
+        };
+        xhr.send();
+      },
+      post: function (url, data, fn) {
+        var xhr = new XMLHttpRequest();
+        xhr.open("POST", url, true);
+        xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+        xhr.onreadystatechange = function () {
+          if (xhr.readyState == 4 && (xhr.status == 200 || xhr.status == 304)) {
+            fn.call(this, xhr.responseText);
+          }
+        };
+        xhr.send(data);
+      }
+    }
+
+      ; (() => {
+        new Vue({
+          el: "#app",
+          data: {
+            title: "JAVA游戏下载",
+            gh_user: "waifu-project",
+            gh_repo: "j2me_games",
+            games: [],
+            sorts: [
+              "全部",
+              "角色",
+              "动作",
+              "益智",
+              "策略",
+              "射击",
+              "其他",
+              "汉化",
+              "赛车",
+              "棋牌"
+            ],
+            current_sort: 0
+          },
+          created: function () {
+            this.getAllGames()
+          },
+          computed: {
+            nowGames: {
+              get: function() {
+                const id = this.current_sort
+                const games = this.games
+                if (id == 0) return games
+                return games.filter(item=> {
+                  const fid = item.fid
+                  return fid == id
+                })
+              },
+              set: function(index) {
+                this.current_sort = index
+              }
+            }
+          },
+          methods: {
+            url2cdn: function(item) {
+              const { file_id } = item
+              const result = `https://cdn.jsdelivr.net/gh/${ this.gh_user }/${ this.gh_repo }${ file_id }`
+              return result
+            },
+            getAllGames: function() {
+              Ajax.get("/games.json", text=> {
+                try {
+                  const data = JSON.parse(text)
+                  this.games = data
+                } catch (error) {
+                  console.error(error)
+                }
+              })
+            },
+            download: function(item) {
+              window.open(this.url2cdn(item));
+            },
+            changeCurrentSort: function(index) {
+              this.nowGames = index
+            }
+          }
+        })
+      })()
+  </script>
+</body>
+
+</html>

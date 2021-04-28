@@ -1,0 +1,22 @@
+{
+  "name": "j2me_games",
+  "version": "1.0.0",
+  "description": "",
+  "main": "resp.js",
+  "dependencies": {
+    "cheerio": "^1.0.0-rc.6",
+    "download": "^8.0.0",
+    "got": "^11.8.2",
+    "jsonfile": "^6.1.0",
+    "qjobs": "^1.2.0",
+    "shortid": "^2.2.16"
+  },
+  "devDependencies": {
+    "vue": "^2.6.12"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC"
+}
