@@ -119,6 +119,11 @@
               })
             },
             download: function(item) {
+              if (window.hasOwnProperty("WEBVIEW")) {
+                const url = this.url2cdn(item)
+                window.WEBVIEW.download(`${ item.title } | ${ item.fid } | ${ url }`)
+                return
+              }
               try {
                 const a = document.createElement('a')
                 a.href = this.url2cdn(item)
