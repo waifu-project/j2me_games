@@ -7,7 +7,7 @@
 
 **欢迎加入j2me游戏吹水群**
 
-![图片.png](https://i.loli.net/2021/05/16/2GabZOiVjdY7XC8.png)
+![图片.png](./qq.jpeg)
 
 # 版权声明
 
